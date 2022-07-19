@@ -111,26 +111,26 @@ namespace testoSaber
                 {
                     return this.Tail;
                 }
-                
+
                 Random rnd = new Random();
-                int value = rnd.Next(1, Count-1);
+                int value = rnd.Next(1, Count - 1);
                 return WeNeedToGoDeeper(value);
             }
 
             //Рекурсивно проходит внутрь списка с головы value раз
-            private ListNode WeNeedToGoDeeper(int value)
+            private ListNode seePrevfromHead(int value)
             {
-                ListNode Elem = this.Head;
+                ListNode elem = this.Head;
                 for (int i = 0; i < value; i++)
                 {
-                    Elem = ISeeIn(Elem);
+                    elem = seePrev(elem);
                 }
 
-                return Elem;
+                return elem;
             }
 
             //Показывает предыдущий элемент указанного узла
-            private ListNode ISeeIn(ListNode element)
+            private ListNode seePrev(ListNode element)
             {
                 return element.Previous;
             }
@@ -141,13 +141,13 @@ namespace testoSaber
                 var nodesMyID = new Dictionary<ListNode, int>();
                 var nodesRandomID = new Dictionary<ListNode, int>();
 
-                ListNode Elem = this.Head;
+                ListNode elem = this.Head;
                 for (int i = 0; i < Count; i++)
                 {
-                    nodesMyID.Add(Elem, (Count-i));
-                    Elem = ISeeIn(Elem);
+                    nodesMyID.Add(elem, (Count - i));
+                    elem = seePrev(elem);
                 }
-                foreach(var node in nodesMyID.Keys)
+                foreach (var node in nodesMyID.Keys)
                 {
                     nodesRandomID.Add(node, nodesMyID[node.Random]);
                 }
@@ -156,7 +156,7 @@ namespace testoSaber
             }
 
             //Подготовка листа для извлечения из файла
-            public List<KeyValuePair<string,int>> listFromFile(Stream s)
+            public List<KeyValuePair<string, int>> listFromFile(Stream s)
             {
                 List<KeyValuePair<string, int>> keyValuePairs = new List<KeyValuePair<string, int>>();
 
@@ -167,7 +167,7 @@ namespace testoSaber
 
                 string[] strings = tempo.Split('\n');
 
-                foreach (var str in strings) 
+                foreach (var str in strings)
                 {
                     string[] tempoSplit = str.Split(" ");
                     if (tempoSplit[0] != "")
@@ -175,10 +175,7 @@ namespace testoSaber
                         keyValuePairs.Add(new KeyValuePair<string, int>(tempoSplit[0], Int32.Parse(tempoSplit[1])));
                     }
                 }
-
-
                 keyValuePairs.Reverse();
-
                 return keyValuePairs;
             }
 
@@ -188,17 +185,15 @@ namespace testoSaber
                 var dict = toDict();
                 foreach (var node in dict)
                 {
-                    s.Write(Encoding.UTF8.GetBytes(node.Key.Data),  0, node.Key.Data.Length);
-                    s.Write(Encoding.UTF8.GetBytes(" " + node.Value.ToString() + "\n"),  0, node.Value.ToString().Length + 2);
+                    s.Write(Encoding.UTF8.GetBytes(node.Key.Data), 0, node.Key.Data.Length);
+                    s.Write(Encoding.UTF8.GetBytes(" " + node.Value.ToString() + "\n"), 0, node.Value.ToString().Length + 2);
                 }
             }
 
             //Извлечение из файла
             public void Deserialize(Stream s)
             {
-
                 ListNode listNode = new ListNode();
-
                 var list = listFromFile(s);
                 listNode.Data = list.First().Key;
 
@@ -214,10 +209,7 @@ namespace testoSaber
                     this.pushElement(pair.Key);
                     this.Head.Random = WeNeedToGoDeeper(this.Count - pair.Value);
                 }
-
-
             }
-
         }
     }
 }
